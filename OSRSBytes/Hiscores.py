@@ -119,22 +119,20 @@ class Hiscores(object):
                         successfully or not.
         """
         conn = http.client.HTTPSConnection('secure.runescape.com')
-        if self.accountType == 'N':
-            conn.request("GET", "/m=hiscore_oldschool/index_lite.ws?player={}".format(self.username.replace(' ','%20')))
-            self.response = conn.getresponse()
-            self.status = self.response.status
-        elif self.accountType == 'IM':
-            conn.request("GET", "/m=hiscore_oldschool_ironman/index_lite.ws?player={}".format(self.username.replace(' ','%20')))
-            self.response = conn.getresponse()
-            self.status = self.response.status
-        elif self.accountType == "UIM":
-            conn.request("GET", "/m=hiscore_oldschool_ultimate/index_lite.ws?player={}".format(self.username.replace(' ','%20')))
-            self.response = conn.getresponse()
-            self.status = self.response.status
-        elif self.accountType == "HIM":
-            conn.request("GET", "/m=hiscore_oldschool_hardcore_ironman/index_lite.ws?player={}".format(self.username.replace(' ','%20')))
-            self.response = conn.getresponse()
-            self.status = self.response.status
+
+        account_type = {
+            'N' : 'hiscore_oldschool',
+            'IM' : 'hiscore_oldschool_ironman',
+            'UIM' : 'hiscore_oldschool_ultimate',
+            'HIM' : 'hiscore_oldschool_hardcore_ironman',
+            'TRN' : 'hiscore_oldschool_tournament',
+            'LG' : 'hiscore_oldschool_seasonal'
+        }
+
+        conn.request("GET", "/m={}/index_lite.ws?player={}".format(account_type[self.accountType], self.username.replace(' ','%20')))
+        self.response = conn.getresponse()
+        self.status = self.response.status
+        
         self.__processResponse()
 
     def __processResponse(self):
